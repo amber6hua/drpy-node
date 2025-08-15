@@ -1,5 +1,40 @@
 # drpyS更新记录
 
+### 20250814
+
+更新至V1.2.11
+
+1. 定时任务 增加 `QQ邮箱` 的消息推送方式
+2. `cat源` 增加调试模式，但是不支持 `getProxyUrl` 等方法，需要在环境变量.env文件里启用 `CAT_DEBUG=1`。
+   详情参考 [猫源调试教程](/docs/catDebug.md)
+3. `getProxyUrl` 换成 `getProxy`，兼容T3猫源使用壳子的本地代理,修复 `央视大全` 错误的本地代理获取
+4. 修复`番茄小说` 的正文阅读和搜索。分类接口坏的没能力修。央视最新视频高清下载方案目前只有通过 [`CCTV-GO`](https://wwvy.lanzouo.com/ieEq533kiofe) 包含的 `cbox.exe` 本地解密，无法适配本项目。
+
+### 20250813
+
+更新至V1.2.10
+
+1. 调整首页的文档超链接，定时任务从接口文档里抽出来，订阅过滤内的自动带pwd。文档 /docs 路由增加basic验证防止被盗用接口
+2. 定时任务 /tasks路由返回信息的lastrun和nextrun显示优化，从UTC时间改成北京时间
+3. 尝试支持cat源的本地代理功能，增加`getProxyUrl` 函数,T4增加 `ENV` 对象
+4. 去除 `adapt` 属性 改为 `do` 属性
+
+### 20250812
+
+更新至V1.2.9
+
+已知bug: cat源动态修改代码后如果没重启后端服务，修改的内容不生效(通过打日志看出来的，原因是esm模块缓存)  
+因此代码里通过`?v=文件hash值` 绕过esm缓存机制，不确定会不会造成内存占用问题。  
+定时任务脚本也存在类似问题，但是没做绕过，必须重启服务。
+
+```javascript
+const scriptUrl = `${pathToFileURL(filePath).href}?v=${fileHash}`;
+```
+
+1. py和猫源支持头信息处放ext扩展参数
+2. cat猫源支持T4模式(需要设置中心enable_cat设置为2)
+3. cat t4源支持使用 `req` `jsoup` 等对象，由于drpyS导入在前，理论上drpyS里所有globalThis暴露的变量都可以用
+
 ### 20250810
 
 更新至V1.2.8
