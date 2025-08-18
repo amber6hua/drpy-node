@@ -90,7 +90,7 @@ export default (fastify, options, done) => {
                             invokeMethod = 'homeVod';
                             break;
                         case '一级':
-                            invokeMethod = 'cate';
+                            invokeMethod = 'category';
                             break;
                         case '二级':
                             invokeMethod = 'detail';
@@ -141,7 +141,7 @@ export default (fastify, options, done) => {
                         }
                     }
                     // 分类逻辑
-                    const result = await apiEngine.cate(modulePath, env, query.t, pg, 1, extend);
+                    const result = await apiEngine.category(modulePath, env, query.t, pg, 1, extend);
                     return reply.send(result);
                 }
 
@@ -184,6 +184,7 @@ export default (fastify, options, done) => {
                     ...resultHome,
                     // list: resultHomeVod,
                 };
+                // console.log('resultHomeVod:',resultHomeVod);
                 if (Array.isArray(resultHomeVod) && resultHomeVod.length > 0) {
                     Object.assign(result, {list: resultHomeVod})
                 }

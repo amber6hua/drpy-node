@@ -1,5 +1,32 @@
 # drpyS更新记录
 
+### 20250817
+
+更新至V1.2.13
+
+支持hipy源T4,参考[python环境](/docs/pyenv.md) 进行python依赖安装。
+需要保证终端输入 `python` 能正常识别到即可(保证本地安装了python并且有环境变量)
+
+1. 增加 `hipy` 适配器
+2. 新增依赖 `python-shell` 需要手动安装
+3. 统一libs接口 `cate` 改为 `category`
+4. 修复了 定时任务 `execute-now` 接口返回数据错误
+5. 目前py源的T4支持 ext扩展、getDependence依赖、以及 本地代理 和 动作，凑合能用，代码实现很狗屎。
+
+### 20250815
+
+更新至V1.2.12
+
+关键更新说明: 前面版本不支持cat源内import其他依赖，相对路径都不支持更别说 assets开头的了。
+此版本解决了，用法跟壳子一样，支持`assets://`（映射到spider/catLib） 和相对路径 `./` `../`开头的依赖
+
+1. 修复 `番茄小说` 分类 by 二群 `ƪ(˘⌣˘)ʃ优雅`
+2. 修复 `抖音弹幕直播` by 二群 `ƪ(˘⌣˘)ʃ优雅`
+3. catvod猫源支持import assets开头依赖，ds非调试模式下已经补齐依赖。
+4. 增加 `esm-register.mjs` 通过拦截import导入的esm模块，实现猫源的 `assets:` 导入识别，路径映射到 `spider/catLib`
+5. 增加 cat源 `河南电视代理.js` 用于演示正确的猫源本代写法。action也支持。
+6. 修复猫源T4首页推荐数据问题。
+
 ### 20250814
 
 更新至V1.2.11
@@ -8,7 +35,8 @@
 2. `cat源` 增加调试模式，但是不支持 `getProxyUrl` 等方法，需要在环境变量.env文件里启用 `CAT_DEBUG=1`。
    详情参考 [猫源调试教程](/docs/catDebug.md)
 3. `getProxyUrl` 换成 `getProxy`，兼容T3猫源使用壳子的本地代理,修复 `央视大全` 错误的本地代理获取
-4. 修复`番茄小说` 的正文阅读和搜索。分类接口坏的没能力修。央视最新视频高清下载方案目前只有通过 [`CCTV-GO`](https://wwvy.lanzouo.com/ieEq533kiofe) 包含的 `cbox.exe` 本地解密，无法适配本项目。
+4. 修复`番茄小说` 的正文阅读和搜索。分类接口坏的没能力修。央视最新视频高清下载方案目前只有通过 [
+   `CCTV-GO`](https://wwvy.lanzouo.com/ieEq533kiofe) 包含的 `cbox.exe` 本地解密，无法适配本项目。
 
 ### 20250813
 
