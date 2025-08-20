@@ -4,7 +4,7 @@ import {getSitesMap} from "../utils/sites-map.js";
 import {computeHash, deepCopy, getNowTime} from "../utils/utils.js";
 import {fileURLToPath, pathToFileURL} from 'url';
 import {md5} from "../libs_drpy/crypto-util.js";
-
+import {fastify} from "../controllers/fastlogger.js";
 // 缓存已初始化的模块和文件 hash 值
 const moduleCache = new Map();
 const ruleObjectCache = new Map();
@@ -38,7 +38,8 @@ const loadEsmWithHash = async function (filePath, fileHash, env) {
 const loadEsmWithEnv = async function (filePath, env) {
     const rawCode = await readFile(filePath, 'utf8');
     let injectedCode = rawCode;
-    // let injectedCode = rawCode.replaceAll('assets://js/lib/', '../catLib/'); // esm-rregister处理了，这里不管
+    // 不用管这里,CAT_DEBUG=0的时候走这个逻辑也是会被esm-register处理
+    // let injectedCode = rawCode.replaceAll('assets://js/lib/', '../catLib/'); // esm-register处理了，这里不管
     // console.log('loadEsmWithEnv:', env);
     const esm_flag1 = 'export function __jsEvalReturn';
     const esm_flag2 = 'export default';
@@ -159,8 +160,14 @@ const home = async function (filePath, env, filter = 1) {
 
 const homeVod = async function (filePath, env) {
     const moduleObject = await init(filePath, env);
-    const homeVodResult = json2Object(await moduleObject.homeVod());
-    return homeVodResult && homeVodResult.list ? homeVodResult.list : homeVodResult;
+    try {
+        const homeVodResult = json2Object(await moduleObject.homeVod());
+        return homeVodResult && homeVodResult.list ? homeVodResult.list : homeVodResult;
+    } catch (e) {
+        console.error(e);
+        // fastify.log.error(e);
+        return []
+    }
 }
 
 
@@ -171,7 +178,8 @@ const category = async function (filePath, env, tid, pg = 1, filter = 1, extend 
 
 const detail = async function (filePath, env, ids) {
     const moduleObject = await init(filePath, env);
-    return json2Object(await moduleObject.detail(ids));
+    const vod_id = Array.isArray(ids) ? ids[0] : ids;
+    return json2Object(await moduleObject.detail(vod_id));
 }
 
 
