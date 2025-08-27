@@ -3,8 +3,11 @@ import path from 'path';
 import os from 'os';
 import qs from 'qs';
 import {fileURLToPath} from 'url';
+import {spawn} from "child_process";
+import {existsSync} from 'fs';
 import formBody from '@fastify/formbody';
 import {validateBasicAuth, validateJs, validatePwd} from "./utils/api_validate.js";
+import {goProxy, getGoBinary} from "./utils/binaryManager.js"
 // 注册自定义import钩子
 import './utils/esm-register.mjs';
 // 引入python守护进程
@@ -17,6 +20,7 @@ const {fastify} = fastlogger;
 // 获取当前路径
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = 5757;
+const GOPORT = 57571;
 const MAX_TEXT_SIZE = 0.1 * 1024 * 1024; // 设置最大文本大小为 0.1 MB
 // 定义options的目录
 const docsDir = path.join(__dirname, 'docs');
@@ -32,7 +36,8 @@ const catLibDir = path.join(__dirname, 'spider/catLib');
 const xbpqDir = path.join(__dirname, 'spider/xbpq');
 const viewsDir = path.join(__dirname, 'views');
 const configDir = path.join(__dirname, 'config');
-
+const goBinary = getGoBinary(__dirname);
+let goProc = null;
 // 注册插件以支持 application/x-www-form-urlencoded
 fastify.register(formBody);
 
@@ -47,14 +52,18 @@ fastify.addHook('onReady', async () => {
     }
 });
 
-// 停止时清理守护进程
-fastify.addHook('onClose', async () => {
+async function onClose() {
     try {
         await daemon.stopDaemon();
         fastify.log.info('Python守护进程已停止');
     } catch (error) {
         fastify.log.error(`停止Python守护进程失败: ${error.message}`);
     }
+}
+
+// 停止时清理守护进程
+fastify.addHook('onClose', async () => {
+    await onClose();
 });
 
 // 给静态目录插件中心挂载basic验证
@@ -100,7 +109,7 @@ const handleExit = async (signal) => {
     try {
         console.log(`\nReceived ${signal}, closing server...`);
         // Fastify 提供的关闭方法，内部会触发 onClose 钩子
-        await fastify.close();
+        await onClose();
         console.log('Fastify closed successfully');
         process.exit(0);
     } catch (err) {
@@ -110,7 +119,7 @@ const handleExit = async (signal) => {
 };
 
 // 捕获常见退出信号（Linux 上 pm2 stop 会发 SIGINT 或 SIGTERM）
-['SIGINT', 'SIGTERM'].forEach((sig) => {
+['SIGINT', 'SIGTERM', 'SIGUSR2'].forEach((sig) => {
     process.on(sig, () => handleExit(sig));
 });
 
@@ -131,6 +140,9 @@ process.on('exit', async (code) => {
     console.log(`Process exiting with code: ${code}`);
     // 这里不能直接用 await fastify.close()（Node 在 exit 里不等异步）
     // 但 Fastify 的 SIGINT/SIGTERM 会提前触发，所以这里只记录日志
+    if (goProc) {
+        goProc.kill();
+    }
 });
 
 registerRoutes(fastify, {
@@ -159,6 +171,23 @@ registerRoutes(fastify, {
 // 启动服务
 const start = async () => {
     try {
+
+        if (existsSync(goBinary)) { // 启动golang二进制
+            console.log('[goBinary]准备启动go二进制文件:', goBinary);
+            goProc = spawn(goBinary, ["-p", GOPORT], {
+                stdio: ["ignore", "pipe", "pipe"],
+            });
+
+            // 打印 Go 服务输出
+            goProc.stdout.on("data", (data) => {
+                console.log("[Go-Server]", data.toString().trim());
+            });
+            goProc.stderr.on("data", (data) => {
+                console.log("[Go-Server-STD]", data.toString().trim());
+            });
+        } else {
+            console.log(`[goBinary]找不到go二进制文件:${goBinary},跳过启动`);
+        }
         // 启动 Fastify 服务
         // await fastify.listen({port: PORT, host: '0.0.0.0'});
         await fastify.listen({port: PORT, host: '::'});
@@ -167,8 +196,9 @@ const start = async () => {
         const localAddress = `http://localhost:${PORT}`;
         const interfaces = os.networkInterfaces();
         let lanAddress = 'Not available';
-        for (const iface of Object.values(interfaces)) {
-            if (!iface) continue;
+        // console.log('interfaces:', interfaces);
+        for (const [key, iface] of Object.entries(interfaces)) {
+            if (key.startsWith('VMware Network Adapter VMnet') || !iface) continue;
             for (const config of iface) {
                 if (config.family === 'IPv4' && !config.internal) {
                     lanAddress = `http://${config.address}:${PORT}`;

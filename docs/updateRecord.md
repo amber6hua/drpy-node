@@ -1,5 +1,68 @@
 # drpyS更新记录
 
+### 20250825
+
+更新至V1.2.20
+
+1. 守护进程把`json` 换成 `ujson` 提高数据交互性能
+2. 实验性修改 ds源的 `req` 实现，把`axios`底层请求库换成 `fetch`，解决一些请求网页源码出现的问题（七猫DS已复活）
+3. 日志优化，减少lazy执行结果打印的文本长度
+4. 新增环境变量参数说明文档 [DS项目环境变量说明](/docs/envdoc.md)
+5. 守护进程启动时的空链接error降级为warning
+
+特殊说明: 可以从 [这里](https://github.com/hjdhnx/drpy-node/releases/tag/binary-0825) 下载binary二进制解压到根目录。
+安卓端termux可以直接用，宝盒和装逼壳等壳子需要用自定义插件方式运行(目录注意改一下如binary1不然安termux方式用会导致无法启动服务)
+
+### 20250824
+
+更新至V1.2.19
+
+1. 给hipy源写了一个测试示例,详见文件: `spider/py/base_test.py`,方便py写源时候本地调试
+2. 修改了 `spider/py/base/requirements.txt` 添加必要的注释
+3. 增强了脚本 `spider/py/core/kill_t4_daemon.sh` 的杀进程能力
+4. 修复 `荐片`
+5. 增加脚本 `autorun.ps1` `uninstall.sh`,方便ds运维
+6. 设计了新的js版守护进程桥接程序 `spider/py/core/bridge.js`，同时让守护进程输入数据支持json协议，也许会大幅度提升hipy性能
+7. 修改局域网地址获取逻辑，避免获取到vmware的虚拟网段
+
+注意:本次更新新增了一个nodejs依赖 `pickleparser`，需要执行一次`yarn`命令
+
+### 20250823
+
+更新至V1.2.18
+
+1. 优化python守护进程启动逻辑，无python环境的设备启动ds速度会有所提升
+2. 修了ds的 `荐片` 和 `ikanbot`
+3. 可以在配置里自行选择守护进程版本
+4. 新增 `七猫小说[书]` 的hipy源，移除同名的ds源
+
+注意事项:本次更新有新增python依赖，大家请注意装一下py依赖
+
+### 20250822
+
+更新至V1.2.17
+
+1. 增加一堆 `hipy` 模板源 和相关APP模板
+2. hipy spider 增加 `setCache` `getCache` 函数
+3. map.txt 分隔符从 `@` 改为 `@@`
+4. 优化hipy守护进程执行逻辑，改善性能、稳定性、内存管理
+
+### 20250821
+
+更新至V1.2.16
+
+1. 增加一堆 `hipy` 源
+2. 增加 `live2cms.json` 增加一条本代线路
+3. 猫源解析引擎默认 0 和 1 都视为url模式，以前base64模式有Bug调整 `CAT_DEBUG=2` 开启
+4. 完善hipy源和cat源的map传参机制，map里传参分发源，不用手写配置文件的ext
+5. 修复 `猫爪` 软件不支持 源的ext为object对象的问题
+6. 设置中心增加 `兼容性配置` 开关，目的是让配置带object的场景自动变成字符串用于兼容老旧的壳子
+
+已知bug(待壳子适配):
+
+1. 宝盒不支持ext直接传链接，即使是外网它也会去访问ext然后把源码丢给后续请求导致不正确(drpyHiker和装逼壳子正常)
+2. drpyHiker不支持ext传递object类型，json层面没有进行object转json操作，导致后续接口请求用的 [object Object]
+
 ### 20250819
 
 更新至V1.2.15

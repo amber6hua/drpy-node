@@ -1,7 +1,7 @@
 # drpyS(drpy-node)
 
 nodejs作为服务端的drpy实现。全面升级异步写法  
-~~积极开发中，每日一更~~，当前进度 `78%`  
+~~积极开发中，每日一更~~，当前进度 `86%`  
 ~~找工作中，随缘更新~~  
 上班当牛马，下班要带娃，阶段性佛系趁娃睡觉熬夜更新
 
@@ -9,7 +9,7 @@ nodejs作为服务端的drpy实现。全面升级异步写法
 * [本地配置接口-动态本地](/config?pwd=$pwd)
 * [本地配置接口-动态外网/局域网](/config/1?pwd=$pwd)
 * [其他配置接口-订阅过滤](/docs/sub.md)
-* [python环境](/docs/pyenv.md)
+* [python环境](/docs/pyenv.md) | [DS项目环境变量说明](/docs/envdoc.md)
 * [猫源调试教程](/docs/catDebug.md)
 * [代码加解密工具](/admin/encoder)
 * [V我50支付凭证生成器](/authcoder?len=10&number=1)
@@ -20,30 +20,25 @@ nodejs作为服务端的drpy实现。全面升级异步写法
 * [本站防止爬虫协议](/robots.txt)
 * [本项目主页-免翻](https://git-proxy.playdreamer.cn/hjdhnx/drpy-node)
 * [DS源适配猫影视](https://github.com/hjdhnx/CatPawOpen/tree/ds-cat)
+* [DS插件项目-golang](https://github.com/hjdhnx/drpy-plugin)
 * [drpy2打包项目](https://github.com/hjdhnx/drpy-webpack)
 * [在线猫ds源主页](/cat/index.html)
 
 ## 更新记录
 
-### 20250819
+### 20250825
 
-更新至V1.2.15
+更新至V1.2.20
 
-### 20250818
+### 20250824
 
-更新至V1.2.14
+更新至V1.2.19
 
-### 20250817
+### 20250823
 
-更新至V1.2.13
+更新至V1.2.18
 
-### 20250815
-
-更新至V1.2.12
-
-### 20250814
-
-更新至V1.2.11
+### 20250822
 
 [点此查看完整更新记录](docs/updateRecord.md)
 
@@ -95,11 +90,11 @@ todo:
 
 * 终端执行
 
-`bash -c "$(curl -fsSLk https://git-proxy.playdreamer.cn/hjdhnx/drpy-node/raw/refs/heads/main/autorun.sh)"`
+`bash -c "$(curl -fsSLk https://git-proxy.playdreamer.cn/hjdhnx/drpy-node/raw/refs/heads/main/install/autorun.sh)"`
 
 * 添加定时方案
 
-`echo "30 7 * * * cd /patch && bash -c \"\$(curl -fsSLk https://git-proxy.playdreamer.cn/hjdhnx/drpy-node/raw/refs/heads/main/autorun.sh)\" >> /patch/drpyslog.log 2>&1" | crontab -`
+`echo "30 7 * * * cd /patch && bash -c \"\$(curl -fsSLk https://git-proxy.playdreamer.cn/hjdhnx/drpy-node/raw/refs/heads/main/install/autorun.sh)\" >> /patch/drpyslog.log 2>&1" | crontab -`
 
 或者下载脚本到本地后
 

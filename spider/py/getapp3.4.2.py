@@ -1,17 +1,10 @@
 """
 @header({
-	title: "AppGet",
-	exts: {
-		"小羊4k": {
-			"host": "https://appcms.xy4k.com",
-			"datakey": "7SDWjknU34zqFbVr"
-		},
-		"鲸鱼影视": {
-			"host": "https://jingyu4k-1312635929.cos.ap-nanjing.myqcloud.com/1.json",
-			"datakey": "AAdgrdghjfgswerA",
-			"api": 2
-		}
-	}
+  searchable: 1,
+  filterable: 1,
+  quickSearch: 1,
+  title: 'getapp3.4.2',
+  lang: 'hipy'
 })
 """
 
@@ -20,41 +13,42 @@
 # 新时代青年 2025.06.25 getApp第三版
 import re,sys,uuid,json,base64,urllib3
 from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad,unpad
-sys.path.append('..')
 try:
     # from base.spider import Spider as BaseSpider
     from base.spider import BaseSpider
 except ImportError:
     from t4.base.spider import BaseSpider
+from Crypto.Util.Padding import pad,unpad
+sys.path.append('..')
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 class Spider(BaseSpider):
     xurl,key,iv,init_data,search_verify = '','','','',''
-    headerx = {
-        'User-Agent': 'okhttp/3.10.0'  # okhttp/3.14.9
-    }
+    header = {'User-Agent': 'okhttp/3.14.9'}
 
     def getName(self):
-        return "首页"
+        return "getapp3.4.1"
 
-    def init(self, extend):
-        js1=json.loads(extend)
-        host = js1['host']
-        if not re.match(r'^https?:\/\/[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(:\d+)?(\/)?$',host):
-            host = self.fetch(host, headers=self.headerx, timeout=10, verify=False).text.rstrip('/')
-        api = js1.get('api','/api.php/getappapi')
+    def init(self, extend=''):
+        ext = json.loads(self.extend.strip())
+        host = ext['host']
+        if not re.match(r'^https?:\/\/[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(:\d+)?(\/)?$', host):
+            host = self.fetch(host, headers=self.header, timeout=10, verify=False).text.rstrip('/')
+        ua = ext.get('ua')
+        if ua:
+            self.header['User-Agent'] = ua
+        api = ext.get('api', '/api.php/getappapi')
         if str(api) == '2':
             api = '/api.php/qijiappapi'
         self.xurl = host + api
-        self.key = js1['datakey']
-        self.iv = js1.get('dataiv',self.key)
-        res = self.fetch(self.xurl + '.index/initV119', headers=self.headerx, verify=False).json()
+        self.key = ext.get('datakey') or ext.get('key')
+        self.iv = ext.get('dataiv', self.key)
+        res = self.fetch(self.xurl + '.index/initV119', headers=self.header, verify=False).json()
         encrypted_data = res['data']
         response = self.decrypt(encrypted_data)
         init_data = json.loads(response)
         self.init_data = init_data
-        self.search_verify = init_data['config'].get('system_search_verify_status',False)
+        self.search_verify = init_data['config'].get('system_search_verify_status', False)
 
     def homeContent(self, filter):
         kjson = self.init_data
@@ -115,7 +109,7 @@ class Spider(BaseSpider):
             'class': ext.get('class','全部')
         }
         url = f'{self.xurl}.index/typeFilterVodList'
-        res = self.post(url=url, headers=self.headerx,data=payload, verify=False).json()
+        res = self.post(url=url, headers=self.header, data=payload, verify=False).json()
         encrypted_data = res['data']
         kjson = self.decrypt(encrypted_data)
         kjson1 = json.loads(kjson)
@@ -142,7 +136,7 @@ class Spider(BaseSpider):
 
         for endpoint in api_endpoints:
             url = f'{self.xurl}.index/{endpoint}'
-            response = self.post(url=url, headers=self.headerx, data=payload, verify=False)
+            response = self.post(url=url, headers=self.header, data=payload, verify=False)
 
             if response.status_code == 200:
                 response_data = response.json()
@@ -205,7 +199,7 @@ class Spider(BaseSpider):
         elif parse_type == '2':
             res = {"parse": 1, "url": uid+kurl, "header": {'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 14; 23113RK12C Build/SKQ1.231004.001)'}}
         elif player_parse_type == '2':
-            response = self.fetch(url=f'{uid}{kurl}',verify=False)
+            response = self.fetch(url=f'{uid}{kurl}',headers=self.header, verify=False)
             if response.status_code == 200:
                 kjson1 = response.json()
                 res = {"parse": 0, "url": kjson1['url'], "header": {'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 14; 23113RK12C Build/SKQ1.231004.001)'}}
@@ -218,7 +212,7 @@ class Spider(BaseSpider):
                 'token': token
             }
             url1 = f"{self.xurl}.index/vodParse"
-            response = self.post(url=url1, headers=self.headerx, data=payload, verify=False)
+            response = self.post(url=url1, headers=self.header, data=payload, verify=False)
             if response.status_code == 200:
                 response_data = response.json()
                 encrypted_data = response_data['data']
@@ -254,7 +248,7 @@ class Spider(BaseSpider):
                 payload['code'] = verifi['code']
                 payload['key'] = verifi['uuid']
             url = f'{self.xurl}.index/searchList'
-            res = self.post(url=url, data=payload, headers=self.headerx, verify=False).json()
+            res = self.post(url=url, data=payload, headers=self.header, verify=False).json()
             if not res.get('data'):
                 return {'list':[] ,'msg': res.get('msg')}
             encrypted_data = res['data']
@@ -308,7 +302,7 @@ class Spider(BaseSpider):
         return encrypted_data_b64
 
     def ocr(self, base64img):
-        dat2 = self.post("https://api.nn.ci/ocr/b64/text", data=base64img, headers=self.headerx, verify=False).text
+        dat2 = self.post("https://api.nn.ci/ocr/b64/text", data=base64img, headers=self.header, verify=False).text
         if dat2:
             return dat2
         else:
@@ -316,7 +310,7 @@ class Spider(BaseSpider):
 
     def verification(self):
         random_uuid = str(uuid.uuid4())
-        dat = self.fetch(f'{self.xurl}.verify/create?key={random_uuid}',headers=self.headerx, verify=False).content
+        dat = self.fetch(f'{self.xurl}.verify/create?key={random_uuid}', headers=self.header, verify=False).content
         base64_img = base64.b64encode(dat).decode('utf-8')
         if not dat:
             return None
