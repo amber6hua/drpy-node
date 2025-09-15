@@ -18,7 +18,8 @@ const {fastify} = fastlogger;
 // 获取当前路径
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = 5757;
-const MAX_TEXT_SIZE = 0.1 * 1024 * 1024; // 设置最大文本大小为 0.1 MB
+const MAX_TEXT_SIZE = process.env.MAX_TEXT_SIZE || 0.1 * 1024 * 1024; // 设置最大文本大小为 0.1 MB
+const MAX_IMAGE_SIZE = process.env.MAX_IMAGE_SIZE || 0.5 * 1024 * 1024; // 设置最大图片大小为 500 KB
 // 定义options的目录
 const rootDir = __dirname;
 const docsDir = path.join(__dirname, 'docs');
@@ -32,7 +33,6 @@ const pyDir = path.join(__dirname, 'spider/py');
 const catDir = path.join(__dirname, 'spider/catvod');
 const catLibDir = path.join(__dirname, 'spider/catLib');
 const xbpqDir = path.join(__dirname, 'spider/xbpq');
-const viewsDir = path.join(__dirname, 'views');
 const configDir = path.join(__dirname, 'config');
 
 const pluginProcs = startAllPlugins(__dirname);
@@ -173,7 +173,7 @@ registerRoutes(fastify, {
     xbpqDir,
     PORT,
     MAX_TEXT_SIZE,
-    viewsDir,
+    MAX_IMAGE_SIZE,
     configDir,
     indexFilePath: path.join(__dirname, 'index.json'),
     customFilePath: path.join(__dirname, 'custom.json'),

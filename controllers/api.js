@@ -72,6 +72,7 @@ export default (fastify, options, done) => {
             const publicUrl = `${protocol}://${hostname}/public/`;
             const jsonUrl = `${protocol}://${hostname}/json/`;
             const httpUrl = `${protocol}://${hostname}/http`;
+            const imageApi = `${protocol}://${hostname}/image`;
             const mediaProxyUrl = `${protocol}://${hostname}/mediaProxy`;
             const hostUrl = `${hostname.split(':')[0]}`;
             const fServer = fastify.server;
@@ -88,6 +89,7 @@ export default (fastify, options, done) => {
                     publicUrl,
                     jsonUrl,
                     httpUrl,
+                    imageApi,
                     mediaProxyUrl,
                     hostUrl,
                     hostname,
@@ -234,7 +236,8 @@ export default (fastify, options, done) => {
                         null,
                         `初始化接口[${moduleName}]`
                     );
-                    return reply.send(refreshedObject);
+                    const {context, ...responseObject} = refreshedObject;
+                    return reply.send(responseObject);
                 }
                 if (!('filter' in query)) {
                     query.filter = 1
@@ -293,6 +296,7 @@ export default (fastify, options, done) => {
         const publicUrl = `${protocol}://${hostname}/public/`;
         const jsonUrl = `${protocol}://${hostname}/json/`;
         const httpUrl = `${protocol}://${hostname}/http`;
+        const imageApi = `${protocol}://${hostname}/image`;
         const mediaProxyUrl = `${protocol}://${hostname}/mediaProxy`;
         const hostUrl = `${hostname.split(':')[0]}`;
 
@@ -310,6 +314,7 @@ export default (fastify, options, done) => {
                 publicUrl,
                 jsonUrl,
                 httpUrl,
+                imageApi,
                 mediaProxyUrl,
                 hostUrl,
                 hostname,
@@ -404,6 +409,7 @@ export default (fastify, options, done) => {
         const publicUrl = `${protocol}://${hostname}/public/`;
         const jsonUrl = `${protocol}://${hostname}/json/`;
         const httpUrl = `${protocol}://${hostname}/http`;
+        const imageApi = `${protocol}://${hostname}/image`;
         const mediaProxyUrl = `${protocol}://${hostname}/mediaProxy`;
         const hostUrl = `${hostname.split(':')[0]}`;
         const fServer = fastify.server;
@@ -419,6 +425,7 @@ export default (fastify, options, done) => {
                 publicUrl,
                 jsonUrl,
                 httpUrl,
+                imageApi,
                 mediaProxyUrl,
                 hostUrl,
                 hostname,
