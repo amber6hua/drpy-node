@@ -35,6 +35,7 @@ import {
     parseQueryString, buildQueryString, encodeIfContainsSpecialChars, objectToQueryString,
     getOriginalJs,
     pako, gbkTool, JSEncrypt, CryptoJS, NODERSA, JSON5, jinja, atob, btoa, stringify,
+    lrcToSrt, strExtract,
     jsEncoder
 } from '../libs_drpy/drpyCustom.js';
 
@@ -245,7 +246,9 @@ export async function getSandbox(env = {}) {
         buildQueryString,
         encodeIfContainsSpecialChars,
         objectToQueryString,
-        forge
+        forge,
+        lrcToSrt,
+        strExtract,
     };
 
     const libsSanbox = {
@@ -697,7 +700,7 @@ async function invokeMethod(filePath, env, method, args = [], injectVars = {}) {
             result = await searchParseAfter(moduleObject, result, args[2]);
             log(`[invokeMethod js:] 搜索 ${injectVars.input} 执行完毕,结果为:`, JSON.stringify(result.list.slice(0, 2)));
         } else if (method === 'class_parse') {
-            result = await homeParseAfter(result, moduleObject.类型, moduleObject.hikerListCol, moduleObject.hikerClassListCol, injectVars);
+            result = await homeParseAfter(result, moduleObject.类型, moduleObject.hikerListCol, moduleObject.hikerClassListCol, moduleObject.hikerSkipEr, injectVars);
         }
         return result;
     }
@@ -786,6 +789,10 @@ async function initParse(rule, env, vm, context) {
     rule.proxy_rule = rule.hasOwnProperty('proxy_rule') ? rule.proxy_rule : '';
     if (!rule.hasOwnProperty('sniffer')) { // 默认关闭辅助嗅探
         rule.sniffer = false;
+    }
+    // 二级为*自动添加hikerSkipEr属性允许跳过形式二级
+    if (!rule.hasOwnProperty('hikerSkipEr') && rule.二级 === '*') {
+        rule.hikerSkipEr = 1;
     }
     rule.sniffer = rule.hasOwnProperty('sniffer') ? rule.sniffer : '';
     rule.sniffer = !!(rule.sniffer && rule.sniffer !== '0' && rule.sniffer !== 'false');

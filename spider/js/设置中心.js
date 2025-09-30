@@ -64,7 +64,7 @@ let quick_data = {
     UC: 'https://drive.uc.cn/s/59023f57d3ce4?public=1',
     阿里: 'https://www.alipan.com/s/vgXMcowK8pQ',
     天翼: 'https://cloud.189.cn/web/share?code=INJbU3NbqyUj',
-    百度: 'https://pan.baidu.com/s/1TdbgcwaMG1dK7B5pQ1LbBg?pwd=1234',
+    百度: 'https://pan.baidu.com/s/1L0UIv4p0X0QrbbKErJuc_w?pwd=2pwj',
     移动1: 'https://yun.139.com/shareweb/#/w/i/0i5CLQ7BpV7Ai',
     移动2: 'https://caiyun.139.com/m/i?2jexC1gcjeN7q',
     移动3: 'https://yun.139.com/shareweb/#/w/i/2i2MoE9ZHn9p1',
@@ -273,7 +273,8 @@ var rule = {
                         imageHeight: 200,
                         imageType: 'card_pic_3',
                         keep: true,
-                        button: 4,
+                        // button: 3,
+                        button: 4, //故意传4,壳子应该默认视为3
                         width: 640,
                         // selectData: '腾讯:=https://v.qq.com/x/cover/m441e3rjq9kwpsc/l0045w5hv1k.html,2:=bb输入默认值bbbbb,3:=c输入默认值ddd,4:=输入默认值,5:=111,6:=22222,7:=HOHO,HELLO,world'
                         selectData: selectData

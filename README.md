@@ -1,7 +1,7 @@
 # drpyS(drpy-node)
 
 nodejs作为服务端的drpy实现。全面升级异步写法  
-~~积极开发中，每日一更~~，当前进度 `99.9999%`  
+~~积极开发中，每日一更~~，当前进度 `99.99999%`  
 ~~找工作中，随缘更新~~  
 上班当牛马，下班要带娃，阶段性佛系趁娃睡觉熬夜更新
 
@@ -36,6 +36,7 @@ nodejs作为服务端的drpy实现。全面升级异步写法
 * [DS内存图片管理器插件](/apps/image-manager/index.html)
 * [DS时钟插件-白色时钟](/apps/clock/white_clock.html)|[日历时钟](/apps/clock/index.html)
 * [DS庆祝页面-完结撒花](/apps/happy/index.html)
+* [DrPlayer](/apps/drplayer)
 * [代码加解密工具](/admin/encoder)
 * [央视点播解析工具](/proxy/央视大全[官]/index.html)
 * [在线猫ds源主页](/cat/index.html)
@@ -48,6 +49,14 @@ nodejs作为服务端的drpy实现。全面升级异步写法
 * [drpy2打包项目](https://github.com/hjdhnx/drpy-webpack)
 
 ## 更新记录
+
+### 20250927
+
+更新至V1.3.6
+
+### 20250925
+
+更新至V1.3.5
 
 ### 20250919
 
