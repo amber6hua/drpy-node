@@ -1,7 +1,7 @@
 # drpyS(drpy-node)
 
 nodejs作为服务端的drpy实现。全面升级异步写法  
-~~积极开发中，每日一更~~，当前进度 `99.99999%`  
+~~积极开发中，每日一更~~，当前进度 `99.999999%`  
 ~~找工作中，随缘更新~~  
 上班当牛马，下班要带娃，阶段性佛系趁娃睡觉熬夜更新
 
@@ -37,6 +37,7 @@ nodejs作为服务端的drpy实现。全面升级异步写法
 * [DS时钟插件-白色时钟](/apps/clock/white_clock.html)|[日历时钟](/apps/clock/index.html)
 * [DS庆祝页面-完结撒花](/apps/happy/index.html)
 * [DrPlayer](/apps/drplayer)
+* [bookReader](/apps/book-reader)
 * [代码加解密工具](/admin/encoder)
 * [央视点播解析工具](/proxy/央视大全[官]/index.html)
 * [在线猫ds源主页](/cat/index.html)
@@ -46,48 +47,24 @@ nodejs作为服务端的drpy实现。全面升级异步写法
 
 * [DS源适配猫影视](https://github.com/hjdhnx/CatPawOpen/tree/ds-cat)
 * [DS插件项目-golang](https://github.com/hjdhnx/drpy-plugin)
+* [DS 二进制插件项目-pup-sniffer](https://github.com/hjdhnx/pup-sniffer)
+* [DS 二进制插件项目-file-index](https://github.com/hjdhnx/file-index)
+* [DS web插件项目-drplayer](https://github.com/hjdhnx/DrPlayer)
 * [drpy2打包项目](https://github.com/hjdhnx/drpy-webpack)
 
 ## 更新记录
 
-### 20250927
+### 20251014
 
-更新至V1.3.6
+更新至V1.3.12
 
-### 20250925
+### 20251013
 
-更新至V1.3.5
+更新至V1.3.11
 
-### 20250919
+### 20251012
 
-更新至V1.3.4
-
-### 20250918
-
-更新至V1.3.3
-
-### 20250916
-
-更新至V1.3.2
-
-### 20250914
-
-更新至V1.3.1
-
-框架已完成，预留0.1%进度修bug
-
-### 20250913
-
-更新至V1.2.30
-
-### 20250911
-
-更新至V1.2.29
-完美dr2模板源适配
-
-### 20250910
-
-更新至V1.2.28
+更新至V1.3.10
 
 [点此查看完整更新记录](docs/updateRecord.md)
 
@@ -118,6 +95,7 @@ todo:
 ## 参考资料
 
 * [crypto-js-wasm使用教程](docs/crypto-js-wasm/readme-CN.md)
+* [webdav使用教程](docs/webdav.md)
 * [puppeteer使用教程](docs/pupInstall.md)
 * [drpyS源属性说明](docs/ruleAttr.md)
 * [drpy2写源简述](docs/ruleDesc.md)
@@ -188,6 +166,7 @@ pm2 restart drpys
 * [ZY写源教学](https://zy.catni.cn/editSource/edit-grammar.html)
 * [源动力-新](https://tvshare.cn/)
 * [源动力-老](https://sourcepower.top/index)
+* [电竞专业反应测试](https://www.arealme.com/brain-memory-game/zh/)
 
 ## AI接入
 

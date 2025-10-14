@@ -36,6 +36,14 @@ import cronTaskerController from './cron-tasker.js';
 import sourceCheckerController from './source-checker.js';
 // 图片存储控制器
 import imageStoreController from './image-store.js';
+// WebDAV 代理控制器
+import webdavProxyController from './webdav-proxy.js';
+// FTP 代理控制器
+import ftpProxyController from './ftp-proxy.js';
+// 文件代理控制器
+import fileProxyController from './file-proxy.js';
+import m3u8ProxyController from './m3u8-proxy.js';
+import unifiedProxyController from './unified-proxy.js';
 
 /**
  * 注册所有路由控制器
@@ -76,4 +84,13 @@ export const registerRoutes = (fastify, options) => {
     fastify.register(sourceCheckerController, options);
     // 注册图片存储路由
     fastify.register(imageStoreController, options);
+    // 注册 WebDAV 代理路由
+    fastify.register(webdavProxyController, options);
+    // 注册 FTP 代理路由
+    fastify.register(ftpProxyController, options);
+    // 注册文件代理路由
+    fastify.register(fileProxyController, options);
+    fastify.register(m3u8ProxyController, options);
+    // 注册统一代理路由
+    fastify.register(unifiedProxyController, options);
 };
